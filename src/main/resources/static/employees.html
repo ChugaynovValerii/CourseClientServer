@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Employees</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+
+        h1 {
+            font-family: "Alternate Gothi", serif;
+            align-content: center;
+            height: 50px;
+            margin-top: 0px;
+            color: #ffffff;
+            text-align: center;
+            background-color: #4f48a3;
+            font-size: 40px;
+            font-weight: lighter;
+        }
+
+        p {
+            width: 100%;
+            margin: 0 auto 15px;
+            text-align: center;
+        }
+
+        input {
+            font-family: "Alternate Gothi", serif;
+            font-size: 20px;
+            width: 200px;
+            border-color: #000000;
+            padding: 10px;
+            font-weight: lighter;
+            text-align: center;
+        }
+
+        button {
+            font-family: "Alternate Gothi", serif;
+            font-size: 20px;
+            background-color: #4f48a3;
+            color: #ffffff;
+            border: none;
+            width: 200px;
+            padding: 10px;
+            font-weight: lighter;
+        }
+
+        div {
+            align-content: center;
+            float: left;
+            width: 80%;
+            margin-left: 2%;
+            overflow: auto;
+        }
+
+        table {
+            font-family: "Alternate Gothi", serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #000000;
+            text-align: center;
+            padding: 5px;
+        }
+
+        table td:nth-child(1) {
+            width: 10%;
+        }
+
+        table td:nth-child(2) {
+            width: 20%;
+        }
+
+        table td:nth-child(3) {
+            width: 20%;
+        }
+
+        table td:nth-child(4) {
+            width: 20%;
+        }
+
+        table td:nth-child(5) {
+            width: 20%;
+        }
+
+        table td:nth-child(6) {
+            width: 10%;
+        }
+
+    </style>
+    <h1>
+        <button onclick="location.href='menu.html'"
+                style="float: left; margin-left: 10px; margin-top: 4px; width: 100px">Back
+        </button>
+        Employees
+        <button onclick="signOut()" style="float: right; margin-right: 10px; margin-top: 4px; width: 100px">Exit
+        </button>
+    </h1>
+</head>
+<body>
+
+
+<div style="height: 550px;">
+    <table id="employees"></table>
+</div>
+
+<p>
+    <button onclick="loadEmployees()">Show all</button>
+</p>
+<p>
+    <input id="searchById" placeholder="ID">
+    <button onclick="searchById()">Find by ID</button>
+</p>
+
+<script>
+    function loadDep() {
+        let department = document.getElementById("department");
+        let xhr = new XMLHttpRequest();
+        xhr.onloadend = function () {
+            if (this.status === 200) {
+                let departments = JSON.parse(this.responseText);
+                for (let i = 0; i < departments.length; i++) {
+                    let dep = departments[i].name;
+                    department.options[i] = new Option(dep, dep);
+                }
+            }
+        };
+
+        xhr.open("GET", "http://localhost:8080/departments/list", true);
+        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem("Authentication"));
+        xhr.send();
+    }
+</script>
+
+<div style="text-align: center; margin-top: 10px">
+    <input id="firstName" placeholder="First Name" style="width: 16.5%">
+    <input id="lastName" placeholder="Last Name" style="width: 16.5%">
+    <input id="fatherName" placeholder="Father name" style="width: 16.5%">
+    <input id="position" placeholder="Position" style="width: 16.5%">
+    <input id="salary" placeholder="Salary" style="width: 16%">
+    <select id="department" placeholder="Department" style="width: 16%; height: 40px">
+        <script>loadDep();</script>
+    </select>
+    <button style="margin-top: 10px" onclick="addEmployee()">Add</button>
+
+</div>
+
+<script>
+    function searchById() {
+        let id = document.getElementById("searchById").value;
+        let xhr = new XMLHttpRequest();
+        xhr.onloadend = function () {
+            if (this.status >= 400) {
+                alert("Error!");
+                location.reload();
+            }
+            if (this.status === 200) {
+                let employee = JSON.parse(this.responseText);
+                let html = '<tr>'
+                    + '<th>ID</th>'
+                    + '<th>First Name</th>'
+                    + '<th>Last Name</th>'
+                    + '<th>Father name</th>'
+                    + '<th>Position</th>'
+                    + '<th>Salary</th>'
+                    + '<th></th>'
+                    + '</tr>'
+                    + '<tr><td>' + employee.id + '</td>'
+                    + '<td>' + employee.firstName + '</td>'
+                    + '<td>' + employee.lastName + '</td>'
+                    + '<td>' + employee.fatherName + '</td>'
+                    + '<td>' + employee.position + '</td>'
+                    + '<td>' + employee.salary + '</td>'
+                    + '<td><button onclick="deleteEmployee(' + employee.id + ')">Delete</button></td></tr>';
+
+                document.getElementById("employees").innerHTML = html;
+            }
+        };
+
+        xhr.open("GET", "http://localhost:8080/employees/list/" + id, true);
+        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem("Authentication"));
+        xhr.send();
+    }
+
+    function deleteEmployee(id) {
+        let xhr = new XMLHttpRequest();
+
+        xhr.onloadend = function () {
+            if (this.status >= 400) {
+                alert("Error!");
+            }
+        };
+
+        xhr.open("DELETE", "http://localhost:8080/employees/delete/" + id, true);
+        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem("Authentication"));
+        xhr.send();
+        location.reload();
+    }
+
+    function addEmployee() {
+        let firstName = document.getElementById("firstName").value;
+        let lastName = document.getElementById("lastName").value;
+        let fatherName = document.getElementById("fatherName").value;
+        let position = document.getElementById("position").value;
+        let salary = document.getElementById("salary").value;
+
+        let department = document.getElementById("department").value;
+
+        let xhr = new XMLHttpRequest();
+        xhr.onloadend = function () {
+            if (this.status >= 400) {
+                alert("Error!");
+            }
+        };
+
+        xhr.open("POST", "http://localhost:8080/employees/addEmployee");
+        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem("Authentication"));
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify({
+            firstName: firstName, lastName: lastName, fatherNameName: fatherName,
+            position: position, salary: salary, department: department
+        }));
+        location.reload();
+    }
+
+    function loadEmployees() {
+        let xhr = new XMLHttpRequest();
+        xhr.onloadend = function () {
+            if (this.status === 200) {
+                let employees = JSON.parse(this.responseText);
+                let html = '<tr>'
+                    + '<th>ID</th>'
+                    + '<th>First Name</th>'
+                    + '<th>Last Name</th>'
+                    + '<th>Father name</th>'
+                    + '<th>Position</th>'
+                    + '<th>Salary</th>'
+                    + '<th></th>'
+                    + '</tr>';
+                for (let i = 0; i < employees.length; i++) {
+                    let employee = employees[i];
+                    html = html + '<tr><td>' + employee.id + '</td>'
+                        + '<td>' + employee.firstName + '</td>'
+                        + '<td>' + employee.lastName + '</td>'
+                        + '<td>' + employee.fatherNameName + '</td>'
+                        + '<td>' + employee.position + '</td>'
+                        + '<td>' + employee.salary + '</td>'
+                        + '<td><button onclick="deleteEmployee(' + employee.id + ')">Delete</button></td>'
+                        + '</tr>';
+
+                }
+                document.getElementById("employees").innerHTML = html;
+            }
+        };
+
+        xhr.open("GET", "http://localhost:8080/employees/list", true);
+        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem("Authentication"));
+        xhr.send();
+    }
+
+    function signOut() {
+        localStorage.clear();
+        window.location.href = "index.html";
+    }
+
+    loadEmployees();
+</script>
+</body>
+</html>

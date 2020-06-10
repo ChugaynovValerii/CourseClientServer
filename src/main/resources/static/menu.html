@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #fff;
+        }
+        h1 {
+            font-family: "Alternate Gothi",serif;
+            align-content: center;
+            height: 50px;
+            margin-top: 0px;
+            color: #ffffff;
+            text-align: center;
+            background-color: #4f48a3;
+            font-size: 40px;
+            font-weight: lighter;
+        }
+
+        div {
+            align-content: center;
+            float: left;
+            width: 93%;
+            margin-top: 15%;
+            overflow: auto;
+        }
+
+        p {
+            width: 100%;
+            margin: 0 auto 15px;
+            text-align: center;
+        }
+        input {
+            font-family: "Alternate Gothi",serif;
+            width: 300px;
+            font-size: 20px;
+            border-color: #000000;
+            padding: 10px;
+            font-weight: lighter;
+            text-align: center;
+        }
+        button {
+            font-family: "Alternate Gothi",serif;
+            font-size: 20px;
+            background-color: #4f48a3;
+            color: #ffffff;
+            border: none;
+            width: 300px;
+            padding: 10px;
+            font-weight: lighter;
+        }
+    </style>
+    <h1>
+        Menu
+        <button onclick="signOut()" style="top: 0px; float: right; margin-right: 10px; margin-top: 4px; width: 100px">Exit
+        </button>
+    </h1>
+</head>
+<body>
+
+    <div>
+        <p><button onclick="location.href='employees.html'">Employees</button></p>
+        <p><button onclick="location.href='departments.html'">Departments</button></p>
+        <p><button onclick="location.href='projects.html'">Projects</button></p>
+    </div>
+
+
+<script>
+    function signOut() {
+        localStorage.clear();
+        window.location.href = "index.html";
+    }
+</script>
+
+</body>
+</html>

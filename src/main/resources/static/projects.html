@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Projects</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+
+        h1 {
+            align-content: center;
+            height: 50px;
+            margin-top: 0px;
+            color: #ffffff;
+            text-align: center;
+            background-color: #4f48a3;
+            font-size: 40px;
+            font-weight: lighter;
+        }
+
+        p {
+            width: 100%;
+            margin: 0 auto 15px;
+            text-align: center;
+        }
+
+        input {
+            font-family: "Alternate Gothi", serif;
+            font-size: 20px;
+            width: 200px;
+            border-color: #000000;
+            padding: 10px;
+            font-weight: lighter;
+            text-align: center;
+        }
+
+        button {
+            font-family: "Alternate Gothi", serif;
+            font-size: 20px;
+            background-color: #4f48a3;
+            color: #ffffff;
+            border: none;
+            width: 200px;
+            padding: 10px;
+            font-weight: lighter;
+        }
+
+        div {
+            align-content: center;
+            float: left;
+            width: 80%;
+            margin-left: 2%;
+            overflow: auto;
+        }
+
+        table {
+            font-family: "Alternate Gothi", serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #000000;
+            text-align: center;
+            padding: 5px;
+        }
+
+        table td:nth-child(1) {
+            width: 10%;
+        }
+
+        table td:nth-child(2) {
+            width: 12%;
+        }
+
+        table td:nth-child(3) {
+            width: 12%;
+        }
+
+        table td:nth-child(4) {
+            width: 12%;
+        }
+
+        table td:nth-child(5) {
+            width: 12%;
+        }
+
+        table td:nth-child(6) {
+            width: 12%;
+        }
+
+        table td:nth-child(7) {
+            width: 12%;
+        }
+
+        table td:nth-child(8) {
+            width: 12%;
+        }
+    </style>
+    <h1>
+        <button onclick="location.href='menu.html'"
+                style="float: left; margin-left: 10px; margin-top: 4px; width: 100px">Back
+        </button>
+        Projects
+        <button onclick="signOut()" style="float: right; margin-right: 10px; margin-top: 4px; width: 100px">Exit
+        </button>
+    </h1>
+</head>
+<body>
+
+
+<div style="height: 550px;">
+    <table id="projects">
+
+    </table>
+</div>
+<p>
+    <button onclick="loadProjects()">Show all</button>
+</p>
+<p>
+    <input id="searchById" placeholder="ID">
+    <button onclick="searchById()">Find by ID</button>
+</p>
+<p>
+    <input id="searchByName" placeholder="Name">
+    <button onclick="searchByName()">Find by name</button>
+</p>
+<script>
+    function loadDep() {
+        let department = document.getElementById("department");
+        let xhr = new XMLHttpRequest();
+        xhr.onloadend = function () {
+            if (this.status === 200) {
+                let departments = JSON.parse(this.responseText);
+                for (let i = 0; i < departments.length; i++) {
+                    let dep = departments[i].name;
+                    department.options[i] = new Option(dep, dep);
+                }
+            }
+        };
+        xhr.open("GET", "http://localhost:8080/departments/list", true);
+        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem("Authentication"));
+        xhr.send();
+    }
+</script>
+
+
+<div style="text-align: center; margin-top: 10px">
+    <input id="name" placeholder="Name" style="width: 16%">
+    <input id="cost" placeholder="Cost" style="width: 16%">
+    <select id="department" style="width: 16%; height: 40px">
+        <script>loadDep();</script>
+    </select>
+    <input id="dateBeg" placeholder="Begin date" style="width: 16%">
+    <input id="dateEnd" placeholder="End date" style="width: 16%">
+    <input id="dateEndReal" placeholder="Real end date" style="width: 16%">
+    <button style="margin-top: 10px" onclick="addProject()">Add</button>
+</div>
+
+
+<script>
+    function searchById() {
+        let id = document.getElementById("searchById").value;
+        let xhr = new XMLHttpRequest();
+        xhr.onloadend = function () {
+            if (this.status === 200) {
+                let project = JSON.parse(this.responseText);
+                let html = '<tr>'
+                    + '<th>ID</th>'
+                    + '<th>Name</th>'
+                    + '<th>Cost</th>'
+                    + '<th>Department</th>'
+                    + '<th>Begin date</th>'
+                    + '<th>End date</th>'
+                    + '<th>Real end date</th>'
+                    + '<th></th>'
+                    + '</tr>';
+
+                html = html + '<tr><td>' + project.id + '</td>'
+                    + '<td>' + project.name + '</td>'
+                    + '<td>' + project.cost + '</td>'
+                    + '<td>' + project.department.name + '</td>'
+                    + '<td>' + project.dateBeg + '</td>'
+                    + '<td>' + project.dateEnd + '</td>'
+                    + '<td>' + project.dateEndReal + '</td>'
+                    + '<td><button onclick="deleteProject(' + project.id + ')">Delete</button></td></tr>';
+
+                document.getElementById("projects").innerHTML = html;
+            }
+            if (this.status >= 400) {
+                alert("Error!");
+                location.reload();
+            }
+        };
+
+        xhr.open("GET", "http://localhost:8080/projects/list/" + id, true);
+        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem("Authentication"));
+        xhr.send();
+    }
+
+    function searchByName() {
+        let name = document.getElementById("searchByName").value;
+        let xhr = new XMLHttpRequest();
+        xhr.onloadend = function () {
+            if (this.status === 200) {
+                let project = JSON.parse(this.responseText);
+                let html = '<tr>'
+                    + '<th>ID</th>'
+                    + '<th>Name</th>'
+                    + '<th>Cost</th>'
+                    + '<th>Department</th>'
+                    + '<th>Begin date</th>'
+                    + '<th>End date</th>'
+                    + '<th>Real end date</th>'
+                    + '<th></th>'
+                    + '</tr>';
+
+                html = html + '<tr><td>' + project.id + '</td>'
+                    + '<td>' + project.name + '</td>'
+                    + '<td>' + project.cost + '</td>'
+                    + '<td>' + project.department.name + '</td>'
+                    + '<td>' + project.dateBeg + '</td>'
+                    + '<td>' + project.dateEnd + '</td>'
+                    + '<td>' + project.dateEndReal + '</td>'
+                    + '<td><button onclick="deleteProject(' + project.id + ')">Delete</button></td></tr>';
+
+                document.getElementById("projects").innerHTML = html;
+            }
+            if (this.status >= 400) {
+                alert("Error!");
+                location.reload();
+            }
+        };
+
+        xhr.open("GET", "http://localhost:8080/projects/" + name, true);
+        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem("Authentication"));
+        xhr.send();
+    }
+
+    function deleteProject(id) {
+        let xhr = new XMLHttpRequest();
+
+        xhr.open("DELETE", "http://localhost:8080/projects/delete/" + id, true);
+        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem("Authentication"));
+        xhr.send();
+        location.reload();
+    }
+
+    function addProject() {
+        let name = document.getElementById("name").value;
+        let cost = document.getElementById("cost").value;
+        let department = document.getElementById("department").value;
+        let dateBeg = document.getElementById("dateBeg").value;
+        let dateEnd = document.getElementById("dateEnd").value;
+        let dateEndReal = document.getElementById("dateEndReal").value;
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.onloadend = function () {
+            if (this.status >= 400) {
+                alert("Error!");
+            }
+        };
+
+        xhr.open("POST", "http://localhost:8080/projects/addProject");
+        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem("Authentication"));
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify({
+            name: name, cost: cost, department: {name: department},
+            dateBeg: dateBeg, dateEnd: dateEnd, dateEndReal: dateEndReal
+        }));
+        loadProjects();
+        location.reload();
+    }
+
+    function loadProjects() {
+        let xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            if (this.status === 200) {
+                let projects = JSON.parse(this.responseText);
+                let html = '<tr>'
+                    + '<th>ID</th>'
+                    + '<th>Name</th>'
+                    + '<th>Cost</th>'
+                    + '<th>Department</th>'
+                    + '<th>Begin date</th>'
+                    + '<th>End date</th>'
+                    + '<th>Real end date</th>'
+                    + '<th></th>'
+                    + '</tr>';
+                for (let i = 0; i < projects.length; i++) {
+                    let project = projects[i];
+                    html = html + '<tr><td>' + project.id + '</td>'
+                        + '<td>' + project.name + '</td>'
+                        + '<td>' + project.cost + '</td>'
+                        + '<td>' + project.department.name + '</td>'
+                        + '<td>' + project.dateBeg + '</td>'
+                        + '<td>' + project.dateEnd + '</td>'
+                        + '<td>' + project.dateEndReal + '</td>'
+                        + '<td><button onclick="deleteProject(' + project.id + ')">Delete</button></td></tr>';
+                }
+                document.getElementById("projects").innerHTML = html;
+            }
+        };
+
+        xhr.open("GET", "http://localhost:8080/projects/list", false);
+        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem("Authentication"));
+        xhr.send();
+    }
+
+    function signOut() {
+        localStorage.clear();
+        window.location.href = "index.html";
+    }
+
+    loadProjects();
+</script>
+
+</body>
+</html>

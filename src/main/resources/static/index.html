@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>Accounting firm</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+
+        h1 {
+            font-family: "Alternate Gothi", serif;
+            align-content: center;
+            height: 50px;
+            margin-top: 0px;
+            color: #ffffff;
+            text-align: center;
+            background-color: #4f48a3;
+            font-size: 40px;
+            font-weight: lighter;
+        }
+
+        input {
+            font-family: "Alternate Gothi", serif;
+            font-size: 20px;
+            width: 200px;
+            border-color: #000000;
+            padding: 10px;
+            font-weight: lighter;
+            text-align: center;
+        }
+
+        button {
+            font-family: "Alternate Gothi", serif;
+            font-size: 20px;
+            background-color: #4f48a3;
+            color: #ffffff;
+            border: none;
+            width: 225px;
+            padding: 10px;
+            font-weight: lighter;
+        }
+
+        div {
+            float: left;
+            margin-top: 10%;
+            margin-left: 43%;
+            width: 100%;
+            overflow: auto;
+        }
+    </style>
+    <h1>Accounting firm</h1>
+</head>
+
+
+<body>
+<div>
+    <p>
+        <input id="userName" placeholder="Login">
+    </p>
+    <p>
+        <input id="password" type="password" placeholder="Password">
+    </p>
+    <p>
+        <button onclick=signIn()>Log in</button>
+    </p>
+    <p>
+        <button onclick="location.href='signup.html'">Sign up</button>
+    </p>
+</div>
+
+</body>
+</html>
+
+
+<script>
+    function signIn() {
+        let username = document.getElementById("userName").value;
+        let pass = document.getElementById("password").value;
+
+        fetch("http://localhost:8080/auth/logIn", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userName: username,
+                password: pass
+            })
+        })
+            .then((response) => {
+                if (response.status >= 400) {
+                    return Promise.reject();
+                }
+                return response.json();
+            }).then((j) => JSON.stringify(j))
+            .then((data) => JSON.parse(data))
+            .then((obj) => localStorage.setItem("Authentication", obj["token"]))
+            .then(() => window.location.href = "menu.html")
+            .catch(() => alert("Пользователь не найден. Пожалуйста зарегестрируйтесь."));
+    }
+</script>
