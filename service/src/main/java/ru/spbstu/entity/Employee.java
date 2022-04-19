@@ -1,33 +1,42 @@
 package ru.spbstu.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 @Entity
-@Table(name = "employees")
 public class Employee {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(
+            name = "employee_sequence",
+            sequenceName = "employee_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_sequence")
     private Long id;
     
-    @Column(columnDefinition = "VARCHAR2(20) NOT NULL")
+    @Column(columnDefinition = "VARCHAR(20)")
     private String firstName;
     
-    @Column(columnDefinition = "VARCHAR2(20) NOT NULL")
+    @Column(columnDefinition = "VARCHAR(20)")
     private String lastName;
     
-    @Column(columnDefinition = "VARCHAR2(20) NOT NULL")
+    @Column(columnDefinition = "VARCHAR(20)")
     private String fatherName;
     
-    @Column(columnDefinition = "VARCHAR2(50) NOT NULL")
+    @Column(columnDefinition = "VARCHAR(50)")
     private String position;
     
-    @Column(columnDefinition = "NUMBER(18,2) NOT NULL")
+    @Column(columnDefinition = "NUMERIC(18,2)")
     private Float salary;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinTable(name = "departments_employees",
-            joinColumns = @JoinColumn(name = "employees_fk"),
-            inverseJoinColumns = @JoinColumn(name = "departments_fk"))
+    
+    @ManyToOne
+    @JoinColumn(name = "department_id")
     private Department department;
 
     public Employee() {
@@ -65,7 +74,7 @@ public class Employee {
         this.lastName = lastName;
     }
     
-    public String getFatherNameName() {
+    public String getFatherName() {
         return fatherName;
     }
     

@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  client:
+    image: nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./static:/usr/share/nginx/html
+
+
+  server:
+    build: ./service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://data:5432/project_monitoring_db
+    depends_on:
+      - data
+    ports:
+      - "8080:8080"
+
+  data:
+    image: postgres:11
+    container_name: data
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: project_monitoring_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "4000:5432"
+
+volumes:
+  postgres-data: null

@@ -60,6 +60,7 @@
             float: left;
             width: 80%;
             margin-left: 2%;
+            height: 550px;
             overflow: auto;
         }
 
@@ -112,7 +113,7 @@
 <body>
 
 
-<div style="height: 550px;">
+<div>
     <table id="employees"></table>
 </div>
 
@@ -145,16 +146,15 @@
 </script>
 
 <div style="text-align: center; margin-top: 10px">
-    <input id="firstName" placeholder="First Name" style="width: 16.5%">
-    <input id="lastName" placeholder="Last Name" style="width: 16.5%">
-    <input id="fatherName" placeholder="Father name" style="width: 16.5%">
-    <input id="position" placeholder="Position" style="width: 16.5%">
-    <input id="salary" placeholder="Salary" style="width: 16%">
-    <select id="department" placeholder="Department" style="width: 16%; height: 40px">
+    <input id="firstName" placeholder="First Name" style="width: 14%">
+    <input id="lastName" placeholder="Last Name" style="width: 14%">
+    <input id="fatherName" placeholder="Father name" style="width: 14%">
+    <input id="position" placeholder="Position" style="width: 14%">
+    <input id="salary" placeholder="Salary" style="width: 14%">
+    <select id="department" placeholder="Department" style="width: 14%; height: 40px">
         <script>loadDep();</script>
     </select>
-    <button style="margin-top: 10px" onclick="addEmployee()">Add</button>
-
+    <button onclick="addEmployee()" style="width: 14%">Add</button>
 </div>
 
 <script>
@@ -163,7 +163,7 @@
         let xhr = new XMLHttpRequest();
         xhr.onloadend = function () {
             if (this.status >= 400) {
-                alert("Error!");
+                alert("Такого отдела не существует!");
                 location.reload();
             }
             if (this.status === 200) {
@@ -199,7 +199,7 @@
 
         xhr.onloadend = function () {
             if (this.status >= 400) {
-                alert("Error!");
+                alert("Не получилось удалить этот отдел!");
             }
         };
 
@@ -221,7 +221,7 @@
         let xhr = new XMLHttpRequest();
         xhr.onloadend = function () {
             if (this.status >= 400) {
-                alert("Error!");
+                alert("Не получилось добавить этот отдел!");
             }
         };
 
@@ -229,7 +229,7 @@
         xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem("Authentication"));
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(JSON.stringify({
-            firstName: firstName, lastName: lastName, fatherNameName: fatherName,
+            firstName: firstName, lastName: lastName, fatherName: fatherName,
             position: position, salary: salary, department: department
         }));
         location.reload();
@@ -254,7 +254,7 @@
                     html = html + '<tr><td>' + employee.id + '</td>'
                         + '<td>' + employee.firstName + '</td>'
                         + '<td>' + employee.lastName + '</td>'
-                        + '<td>' + employee.fatherNameName + '</td>'
+                        + '<td>' + employee.fatherName + '</td>'
                         + '<td>' + employee.position + '</td>'
                         + '<td>' + employee.salary + '</td>'
                         + '<td><button onclick="deleteEmployee(' + employee.id + ')">Delete</button></td>'

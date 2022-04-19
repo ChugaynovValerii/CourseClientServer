@@ -154,15 +154,15 @@
 
 
 <div style="text-align: center; margin-top: 10px">
-    <input id="name" placeholder="Name" style="width: 16%">
-    <input id="cost" placeholder="Cost" style="width: 16%">
-    <select id="department" style="width: 16%; height: 40px">
+    <input id="name" placeholder="Name" style="width: 14%">
+    <input id="cost" placeholder="Cost" style="width: 14%">
+    <select id="department" style="width: 14%; height: 40px">
         <script>loadDep();</script>
     </select>
-    <input id="dateBeg" placeholder="Begin date" style="width: 16%">
-    <input id="dateEnd" placeholder="End date" style="width: 16%">
-    <input id="dateEndReal" placeholder="Real end date" style="width: 16%">
-    <button style="margin-top: 10px" onclick="addProject()">Add</button>
+    <input id="dateBeg" placeholder="Begin date" style="width: 14%">
+    <input id="dateEnd" placeholder="End date" style="width: 14%">
+    <input id="dateEndReal" placeholder="Real end date" style="width: 14%">
+    <button style="margin-top: 10px; width: 14%" onclick="addProject()">Add</button>
 </div>
 
 
@@ -196,7 +196,7 @@
                 document.getElementById("projects").innerHTML = html;
             }
             if (this.status >= 400) {
-                alert("Error!");
+                alert("Такого проекта не существует!");
                 location.reload();
             }
         };
@@ -235,7 +235,7 @@
                 document.getElementById("projects").innerHTML = html;
             }
             if (this.status >= 400) {
-                alert("Error!");
+                alert("Такого проекта не существует!");
                 location.reload();
             }
         };
@@ -266,7 +266,7 @@
 
         xhr.onloadend = function () {
             if (this.status >= 400) {
-                alert("Error!");
+                alert("Не получается добавить этот проект!");
             }
         };
 

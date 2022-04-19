@@ -99,9 +99,7 @@
 <body>
 
 <div>
-    <table id="departments">
-
-    </table>
+    <table id="departments"></table>
 </div>
 
 <p>
@@ -144,7 +142,7 @@
                 document.getElementById("departments").innerHTML = html;
             }
             if (this.status>=400){
-                alert(Error);
+                alert('Такого отдела не существует');
                 location.reload();
             }
         };
@@ -159,7 +157,7 @@
 
         xhr.onloadend = function () {
             if (this.status >= 400) {
-                alert("Error!");
+                alert("Не получилось удалить этот отдел!");
             }
         };
 
@@ -176,7 +174,7 @@
 
         xhr.onloadend = function () {
             if (this.status >= 400) {
-                alert("Error!");
+                alert("Не получилось добавить этот отдел!");
             }
         };
 
@@ -221,7 +219,7 @@
         let xhr = new XMLHttpRequest();
         xhr.onloadend = function () {
             if (this.status >= 400) {
-                alert("Error!");
+                alert("Такого отдела не существует!");
                 location.reload();
             }
             if (this.status === 200) {

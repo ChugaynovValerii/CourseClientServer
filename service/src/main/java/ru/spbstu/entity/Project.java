@@ -1,19 +1,30 @@
 package ru.spbstu.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import java.sql.Date;
 
 @Entity
-@Table(name = "projects")
 public class Project {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(
+            name = "project_sequence",
+            sequenceName = "project_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_sequence")
     private Long id;
     
-    @Column(columnDefinition = "VARCHAR2(200) NOT NULL UNIQUE")
+    @Column(columnDefinition = "VARCHAR(200)")
     private String name;
     
-    @Column(columnDefinition = "NUMBER(18,2) NOT NULL")
+    @Column(columnDefinition = "NUMERIC(18,2)")
     private Float cost;
     
     @Column
@@ -25,7 +36,7 @@ public class Project {
     @Column
     private Date dateEndReal;
     
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
     

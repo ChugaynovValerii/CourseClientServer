@@ -8,9 +8,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ru.spbstu.security.jwt.JwtSecurityConfigurer;
 import ru.spbstu.security.jwt.JwtTokenProvider;
+
+import java.util.List;
 
 
 @Configuration
@@ -31,7 +36,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     @Override
     protected void configure(HttpSecurity http) throws Exception  {
         http.httpBasic().disable()
-                .csrf().disable()
+//                .csrf().disable()
+                .cors().and().csrf().disable()
                 .formLogin().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
